@@ -1,0 +1,1 @@
+mongod --config D:\mongodb\mongo.config --install --serviceName "MongoDB"
