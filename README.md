@@ -2,7 +2,7 @@ shell-learning
 =========
 目录结构
 =========
-	/mnt/d/workspace/ideac/shell-learning/
+    /mnt/d/workspace/ideac/shell-learning
     ├── bigdate
     │   ├── setCDyum.sh
     │   ├── ssh免密登录.sh
@@ -20,13 +20,14 @@ shell-learning
     │   │   └── addJdkEnv2.0.sh
     │   └── 设置环境变量(完美版)
     │       └── SetEnv.tar.gz
+    ├── catalogTool.sh
     ├── datebase
     │   ├── mongodb
     │   │   ├── mongdb安装服务.bat
     │   │   └── mongodb.bat
-    │   ├── oracle
-    │   │   ├── oracleToolsV0.9.bat
-    │   │   ├── oracleToolsV0.9.sh
+    │   ├── oracleTools
+    │   │   ├── oracleToolsV0.96.bat
+    │   │   ├── OracleToolsV0.9.sh
     │   │   └── README.txt
     │   └── redis_boot.bat
     ├── operation
@@ -48,3 +49,5 @@ shell-learning
         ├── read.sh
         ├── while.sh
         └── 菜单多级v1.0.sh
+    
+    10 directories, 36 files
