@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
-    <file url="file://$PROJECT_DIR$/datebase/README.txt" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/datebase/mongodb/mongodb.bat" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/datebase/oracle/oracleToolsV0.9.bat" charset="GB2312" />
+    <file url="file://$PROJECT_DIR$/datebase/oracleTools/README.txt" charset="GB2312" />
+    <file url="file://$PROJECT_DIR$/datebase/oracleTools/oracleToolsV0.96.bat" charset="GB2312" />
     <file url="file://$PROJECT_DIR$/datebase/redis_boot.bat" charset="GB2312" />
     <file url="PROJECT" charset="UTF-8" />
   </component>

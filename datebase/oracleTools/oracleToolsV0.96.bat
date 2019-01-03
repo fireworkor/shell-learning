@@ -89,7 +89,7 @@ goto menu
 
 ::删除用户,表空间
 :deleteUser
-echo "删除用户"
+echo "删除用户,表空间和dbf文件"
 echo --删除用户和对象 >deleteUser.sql
 echo drop user  %createUser% cascade; >>deleteUser.sql
 echo --删除表空间,数据和完整性约束 >>deleteUser.sql
@@ -97,6 +97,7 @@ echo drop tablespace %createUser% including contents cascade constraints; >>dele
 echo commit; >>deleteUser.sql
 echo exit >>deleteUser.sql
 sqlplus sys/%sysPassword%@orcl as sysdba @deleteUser.sql
+del /q %oracleDbf%\%createUser%.dbf
 pause
 goto menu
 
