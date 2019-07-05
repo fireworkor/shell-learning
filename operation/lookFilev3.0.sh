@@ -14,7 +14,7 @@ do
 		break
 	fi
 	fileName=$(ls | sed -n "$lineNum"p)
-	if [ 0 == $fileName ];then 
+	if [ 0 == $lineNum ];then 
 		cd ..
 		continue
 	elif [ -L $fileName ] ;then
