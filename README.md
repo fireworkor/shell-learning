@@ -35,6 +35,7 @@ shell-learning
     │   ├── 磁盘判满否.sh
     │   ├── 防火墙工具.sh
     │   ├── 判断文件类型.sh
+    │   ├── ssh_key_push.sh 批量ssh互信脚本
     │   └── 文件查看器v2.0.sh
     ├── README.md
     └── template
