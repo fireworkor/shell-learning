@@ -1,0 +1,13 @@
+/usr/sbin/pvcreate /dev/sda1
+/usr/sbin/pvcreate /dev/sda2
+/usr/sbin/pvcreate /dev/sda3
+/usr/sbin/pvcreate /dev/sda4
+/usr/sbin/pvcreate /dev/sda5
+/usr/sbin/pvcreate /dev/sda6
+/usr/sbin/pvcreate /dev/sda7
+/usr/sbin/pvcreate /dev/sda8
+/usr/sbin/pvcreate /dev/sda9
+/usr/sbin/pvcreate /dev/sda10
+/usr/sbin/pvcreate /dev/sda11
+/usr/sbin/pvcreate /dev/sda12
+/usr/sbin/pvcreate /dev/sda13
