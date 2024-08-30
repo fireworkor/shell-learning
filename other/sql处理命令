@@ -1,0 +1,5 @@
+sql文件去掉注释的命令
+
+sed -i 's/COMMENT '.*',/,/g' wms.sql
+
+sed -i 's/COMMENT=.*;/;/g' wms.sql
