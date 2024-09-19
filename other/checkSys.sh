@@ -140,7 +140,7 @@ check_port_status() {
             status="$status,$port:off"
         fi
     done
-    echo "${status}"
+    echo "${status:1}"
 }
 
 # 获取系统信息
@@ -162,5 +162,7 @@ port_status=$(check_port_status)
 
 # 以 CSV 格式输出系统信息
 #echo "IP地址,Linux 版本检测,CPU 使用率,内存使用率,硬盘是否有超过百分之 95 的,IO 状态,负载情况,SSH 进程运行情况,防火墙进程运行情况,FTP 进程运行情况,NFS 进程运行情况,Oracle 进程运行情况,系统登录人数,系统运行时间,21端口,22端口,1521端口" | iconv -f UTF-8 -t GBK >>sysInfo.csv
+#echo "$ip,$linux_version,$cpu_usage,$memory_usage,$disk_usage,$io_status,$load_average,$ssh_process,$firewall_process,$ftp_process,$nfs_process,$oracle_process,$login_users,$system_uptime,$port_status"| iconv -f UTF-8 -t GBK >>sysInfo.csv
+
 echo "IP地址,Linux 版本检测,CPU 使用率,内存使用率,硬盘是否有超过百分之 95 的,IO 状态,负载情况,SSH 进程运行情况,防火墙进程运行情况,FTP 进程运行情况,NFS 进程运行情况,Oracle 进程运行情况,系统登录人数,系统运行时间,21端口,22端口,1521端口"  >>sysInfo.csv
 echo "$ip,$linux_version,$cpu_usage,$memory_usage,$disk_usage,$io_status,$load_average,$ssh_process,$firewall_process,$ftp_process,$nfs_process,$oracle_process,$login_users,$system_uptime,$port_status" >>sysInfo.csv
