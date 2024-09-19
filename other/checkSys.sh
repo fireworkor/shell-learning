@@ -6,7 +6,11 @@ get_ip() {
 }
 
 get_linux_version() {
-    cat /etc/os-release | grep -w "VERSION_ID" | awk -F '"' '{print $2}'
+    if [ -f /bin/systemctl ] ; then 
+        cat /etc/os-release | grep -w "VERSION_ID" | awk -F '"' '{print $2}'
+    else
+        cat /etc/issue|awk 'NR==1{print $7}'
+    fi
 }
 
 get_cpu_usage() {
@@ -23,7 +27,11 @@ check_disk_usage() {
 }
 
 get_io_status() {
-    echo `iostat | awk 'NR==4{print $6}'`%
+    if [ -f /usr/bin/iostat ] | [ -f /bin/iostat ] ;then 
+        echo `iostat | awk 'NR==4{print $6}'`%
+    else 
+        echo "N/A"
+    fi
 }
 
 get_load_average() {
@@ -95,16 +103,28 @@ get_login_users() {
 
 get_system_uptime() {
     uptime_str=$(uptime -p)
-    # 将 uptime -p 的输出转换为天和小时
+    # 将 uptime -p 的输出转换为天、小时、分钟和秒
     days=$(echo "$uptime_str" | grep -oP '\d+ days?' | grep -oP '\d+')
     hours=$(echo "$uptime_str" | grep -oP '\d+ hours?' | grep -oP '\d+')
+    mins=$(echo "$uptime_str" | grep -oP '\d+ mins?' | grep -oP '\d+')
+    secs=$(echo "$uptime_str" | grep -oP '\d+ secs?' | grep -oP '\d+')
+    weeks=$(echo "$uptime_str" | grep -oP '\d+ weeks?' | grep -oP '\d+')
+    
     if [ -z "$days" ]; then
         days="0"
     fi
     if [ -z "$hours" ]; then
         hours="0"
     fi
-    echo "运行天数 $days 天 $hours 小时"
+    if [ -z "$mins" ]; then
+        mins="0"
+    fi
+    if [ -z "$secs" ]; then
+        secs="0"
+    fi
+    #echo "运行时间 $weeks 周 $days 天 $hours 小时 $mins 分钟 $secs 秒"
+    echo "运行时间 $weeks 周 $days 天 $hours 小时"
+
 }
 
 check_port_status() {
@@ -112,13 +132,15 @@ check_port_status() {
     status=""
     for port in "${ports[@]}"
     do
-        if nc -z -w 1 localhost "$port" 2>/dev/null; then
+        count=`netstat -natpl|grep -w "$port" |grep LISTEN|wc -l`
+    
+        if [ $count == "1" ]; then
             status="$status,$port:on"
         else
             status="$status,$port:off"
         fi
     done
-    echo "${status:1}"
+    echo "${status}"
 }
 
 # 获取系统信息
@@ -139,5 +161,6 @@ system_uptime=$(get_system_uptime)
 port_status=$(check_port_status)
 
 # 以 CSV 格式输出系统信息
-echo "IP地址,Linux 版本检测,CPU 使用率,内存使用率,硬盘是否有超过百分之 95 的,IO 状态,负载情况,SSH 进程运行情况,防火墙进程运行情况,FTP 进程运行情况,NFS 进程运行情况,Oracle 进程运行情况,系统登录人数,系统运行时间,21端口,22端口,1521端口" | iconv -f UTF-8 -t GBK >>sysInfo.csv
+#echo "IP地址,Linux 版本检测,CPU 使用率,内存使用率,硬盘是否有超过百分之 95 的,IO 状态,负载情况,SSH 进程运行情况,防火墙进程运行情况,FTP 进程运行情况,NFS 进程运行情况,Oracle 进程运行情况,系统登录人数,系统运行时间,21端口,22端口,1521端口" | iconv -f UTF-8 -t GBK >>sysInfo.csv
+echo "IP地址,Linux 版本检测,CPU 使用率,内存使用率,硬盘是否有超过百分之 95 的,IO 状态,负载情况,SSH 进程运行情况,防火墙进程运行情况,FTP 进程运行情况,NFS 进程运行情况,Oracle 进程运行情况,系统登录人数,系统运行时间,21端口,22端口,1521端口"  >>sysInfo.csv
 echo "$ip,$linux_version,$cpu_usage,$memory_usage,$disk_usage,$io_status,$load_average,$ssh_process,$firewall_process,$ftp_process,$nfs_process,$oracle_process,$login_users,$system_uptime,$port_status" >>sysInfo.csv
