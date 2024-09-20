@@ -102,44 +102,44 @@ get_login_users() {
 }
 
 get_system_uptime() {
-    uptime_str=$(uptime -p)
-    # 将 uptime -p 的输出转换为天、小时、分钟和秒
-    days=$(echo "$uptime_str" | grep -oP '\d+ days?' | grep -oP '\d+')
-    hours=$(echo "$uptime_str" | grep -oP '\d+ hours?' | grep -oP '\d+')
-    mins=$(echo "$uptime_str" | grep -oP '\d+ mins?' | grep -oP '\d+')
-    secs=$(echo "$uptime_str" | grep -oP '\d+ secs?' | grep -oP '\d+')
-    weeks=$(echo "$uptime_str" | grep -oP '\d+ weeks?' | grep -oP '\d+')
-    
-    if [ -z "$days" ]; then
-        days="0"
+    uptime_output=$(uptime)
+    if [[ $uptime_output =~ up\ ([0-9]+)\ days,\ ([0-9]+):([0-9]+) ]]; then
+        days=${BASH_REMATCH[1]}
+        hours=${BASH_REMATCH[2]}
+        echo "系统已运行 $days 天 $hours 小时"
+    else
+        echo "无法解析运行时间"
     fi
-    if [ -z "$hours" ]; then
-        hours="0"
-    fi
-    if [ -z "$mins" ]; then
-        mins="0"
-    fi
-    if [ -z "$secs" ]; then
-        secs="0"
-    fi
-    #echo "运行时间 $weeks 周 $days 天 $hours 小时 $mins 分钟 $secs 秒"
-    echo "运行时间 $weeks 周 $days 天 $hours 小时"
-
 }
 
-check_port_status() {
-    ports=("21" "22" "1521")
-    status=""
-    for port in "${ports[@]}"
-    do
-        count=`netstat -natpl|grep -w "$port" |grep LISTEN|wc -l`
-    
-        if [ $count == "1" ]; then
-            status="$status,$port:on"
-        else
-            status="$status,$port:off"
-        fi
-    done
+check_port1521_status() {
+    port=1521
+    count=`netstat -natpl|grep -w "$port" |grep LISTEN|grep tnslsnr|wc -l`
+    if [ $count == "1" ]; then
+        status="$status,$port:on"
+    else
+        status="$status,$port:off"
+    fi
+    echo "${status:1}"
+}
+check_port21_status() {
+    port=21
+    count=`netstat -natpl|grep -w "$port" |grep LISTEN|grep vsftpd|wc -l`
+    if [ $count == "1" ]; then
+        status="$status,$port:on"
+    else
+        status="$status,$port:off"
+    fi
+    echo "${status:1}"
+}
+check_port22_status() {
+    port=22
+    count=`netstat -natpl|grep -w "$port" |grep LISTEN|grep sshd|wc -l`
+    if [ $count == "1" ]; then
+        status="$status,$port:on"
+    else
+        status="$status,$port:off"
+    fi
     echo "${status:1}"
 }
 
@@ -158,11 +158,14 @@ nfs_process=$(check_nfs_process)
 oracle_process=$(check_oracle_process)
 login_users=$(get_login_users)
 system_uptime=$(get_system_uptime)
-port_status=$(check_port_status)
+port21_status=$(check_port21_status)
+port22_status=$(check_port22_status)
+port1521_status=$(check_port1521_status)
+
 
 # 以 CSV 格式输出系统信息
 #echo "IP地址,Linux 版本检测,CPU 使用率,内存使用率,硬盘是否有超过百分之 95 的,IO 状态,负载情况,SSH 进程运行情况,防火墙进程运行情况,FTP 进程运行情况,NFS 进程运行情况,Oracle 进程运行情况,系统登录人数,系统运行时间,21端口,22端口,1521端口" | iconv -f UTF-8 -t GBK >>sysInfo.csv
 #echo "$ip,$linux_version,$cpu_usage,$memory_usage,$disk_usage,$io_status,$load_average,$ssh_process,$firewall_process,$ftp_process,$nfs_process,$oracle_process,$login_users,$system_uptime,$port_status"| iconv -f UTF-8 -t GBK >>sysInfo.csv
 
 echo "IP地址,Linux 版本检测,CPU 使用率,内存使用率,硬盘是否有超过百分之 95 的,IO 状态,负载情况,SSH 进程运行情况,防火墙进程运行情况,FTP 进程运行情况,NFS 进程运行情况,Oracle 进程运行情况,系统登录人数,系统运行时间,21端口,22端口,1521端口"  >>sysInfo.csv
-echo "$ip,$linux_version,$cpu_usage,$memory_usage,$disk_usage,$io_status,$load_average,$ssh_process,$firewall_process,$ftp_process,$nfs_process,$oracle_process,$login_users,$system_uptime,$port_status" >>sysInfo.csv
+echo "$ip,$linux_version,$cpu_usage,$memory_usage,$disk_usage,$io_status,$load_average,$ssh_process,$firewall_process,$ftp_process,$nfs_process,$oracle_process,$login_users,$system_uptime,$port21_status,$port22_status,$port1521_status" >>sysInfo.csv
