@@ -102,14 +102,9 @@ get_login_users() {
 }
 
 get_system_uptime() {
-    uptime_output=$(uptime)
-    if [[ $uptime_output =~ up\ ([0-9]+)\ days,\ ([0-9]+):([0-9]+) ]]; then
-        days=${BASH_REMATCH[1]}
-        hours=${BASH_REMATCH[2]}
-        echo "系统已运行 $days 天 $hours 小时"
-    else
-        echo "无法解析运行时间"
-    fi
+    uptime_output=$(uptime |awk '{print $3$4$5}'|sed -e 's/days/ 天/g'|sed -e 's/,/ /g'|sed -e 's/:.*$/ 小时/g')
+    echo "运行时间 ${uptime_output}"
+    
 }
 
 check_port1521_status() {
